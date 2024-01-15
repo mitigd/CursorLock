@@ -1,4 +1,4 @@
-# Readme
+# CursorLock
 
 This is a simple ASI script that allows you to lock the mouse cursor within a game window. This can be useful for fullscreen games or applications where you want to prevent the cursor from leaving the screen.
 
