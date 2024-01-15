@@ -1,0 +1,45 @@
+# CMakeLists_x64.txt
+
+set(MINHOOK_SOURCES 
+    ${CMAKE_SOURCE_DIR}/minhook/src/hook.c
+    ${CMAKE_SOURCE_DIR}/minhook/src/buffer.c
+    ${CMAKE_SOURCE_DIR}/minhook/src/trampoline.c
+    ${CMAKE_SOURCE_DIR}/minhook/src/hde/hde32.c
+    ${CMAKE_SOURCE_DIR}/minhook/src/hde/hde64.c
+)
+
+# Set source files
+set(MAIN_SOURCES 
+    ${CMAKE_SOURCE_DIR}/src/dllmain.cpp
+    ${MINHOOK_SOURCES}    
+)
+
+# Specify include directories
+include_directories(
+    ${CMAKE_SOURCE_DIR}/minhook/include
+    ${CMAKE_SOURCE_DIR}/minhook/include/src
+    ${CMAKE_SOURCE_DIR}/minhook/include/src/hde
+)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+
+# Add the -g option for debugging information
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -DUNICODE -D_UNICODE")
+
+add_library(cursorlock_x64 SHARED
+    ${MAIN_SOURCES}
+)
+
+# Include directories for your project
+target_include_directories(cursorlock_x64 PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+target_link_libraries(cursorlock_x64 PRIVATE
+    mingw32
+)
+
+# Rename the generated dll to have the .asi extension
+add_custom_command(
+  TARGET cursorlock_x64 POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E rename ${CMAKE_CURRENT_BINARY_DIR}/libcursorlock_x64.dll ${CMAKE_CURRENT_BINARY_DIR}/libcursorlock_x64.asi
+)
